@@ -1,0 +1,24 @@
+  - name: apache2 | install apache2
+    apt: pkg={{item}} state=installed update_cache=yes
+    with_items:
+      - apache2
+    notify:
+      - restart apache
+
+  - name: apache2 | disable default site
+    command: a2dissite 000-default
+    tags: apache2
+
+  - name: apache2 | enable modules
+    command: a2enmod rewrite headers proxy proxy_http expires
+    tags: apache2
+
+  - name: apache2 | copy vhost config
+    template: src=dspace.j2 dest=/etc/apache2/sites-available/dspace.conf
+    tags: apache2
+
+  - name: apache2 | enable dspace site
+    command: a2ensite dspace
+    notify:
+      - restart apache
+    tags: apache2
