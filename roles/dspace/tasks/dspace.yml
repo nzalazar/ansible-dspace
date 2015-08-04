@@ -1,0 +1,72 @@
+# # DSpace
+# - hosts: dspace
+
+# gather_facts: no
+
+#clone dspace repo
+#- name: dspace | clone
+  #sudo: yes
+  #sudo_user: tomcat7
+#  git: repo={{dspace_git_repository}} dest={{dspace_source_dir}} accept_hostkey=yes version={{dspace_git_branch}} depth=1 key_file=~/.ssh/id_rsa.pub
+#  tags: dspace
+
+# - name: dspace | create repo directory
+#   sudo: yes
+#   sudo_user: root
+#   file: path={{dspace_source_dir}} state=directory owner=tomcat7 group=tomcat7 mode=0777 recurse=yes
+#   tags: dspace
+
+
+#copy git repo
+# - name: dspace | copy git repo
+#   copy: src=~/git/dspace-src/ dest={{dspace_source_dir}} owner=tomcat7 group=tomcat7 mode=0744
+#   tags: dspace
+
+#mount NFS filesystem - dspace repo
+# - name: dspace | mount dspace-src
+#   sudo: yes
+#   sudo_user: root
+#   mount: name="{{dspace_source_dir}}" src="{{nfs_server_ip}}:{{nfs_exported_filesystem}}" fstype=nfs state=mounted opts=rw
+#   tags: dspace
+
+
+# - name: dspace | change mounted permision
+#   sudo: yes
+#   sudo_user: root
+#   file: path="{{dspace_source_dir}}" state=directory owner=tomcat7 group=tomcat7 mode=0755 
+#   tags: dspace
+
+- name: dspace | config
+  template: src=build.properties.j2 dest={{dspace_source_dir}}/build.properties 
+  tags: dspace
+
+# - name: dspace | clean
+#   # sudo: yes
+#   # sudo_user: tomcat7
+#   command: mvn clean chdir={{dspace_source_dir}}
+#   tags: dspace
+
+# - name: dspace | build
+#   # sudo: yes
+#   # sudo_user: tomcat7
+#   command: mvn package chdir={{dspace_source_dir}}
+#   tags: dspace
+
+
+# - name: dspace | perform fresh install
+#   command: ant fresh_install chdir={{dspace_source_dir}}/dspace/target/dspace-installer creates={{dspace_install_dir}}/webapps/xmlui
+#   tags: dspace
+
+
+- name: dspace | set up tomcat ROOT context
+  shell: echo '<Context docBase="{{dspace_install_dir}}/webapps/xmlui"/>' > /var/lib/tomcat7/conf/Catalina/localhost/ROOT.xml
+  tags: dspace
+
+
+- name: dspace | set up other tomcat contexts
+  shell: echo '<Context docBase="{{dspace_install_dir}}/webapps/{{item}}"/>' > /var/lib/tomcat7/conf/Catalina/localhost/{{item}}.xml
+  with_items:
+     - solr
+     - jspui
+     - oai
+  tags: dspace
