@@ -22,26 +22,13 @@ Vagrant.configure(2) do |config|
 
  if ENV['DSPACE_SYNC_REPO']
     config.vm.synced_folder ENV['DSPACE_SYNC_REPO'], "/srv/dspace-src", type: "nfs"
-
-    config.vm.provision :ansible do |ansible|
-      ansible.playbook = "site.yml"
-      ansible.host_key_checking = true
-      ansible.extra_vars = { ansible_ssh_user: "vagrant", testing: true }
-      ansible.verbose = "vvvv"
-    end
- else
-    config.vm.provision :ansible do |ansible|
-      ansible.playbook = "site.yml"
-      ansible.host_key_checking = true
-      ansible.extra_vars = { ansible_ssh_user: "vagrant", testing: true }
-      ansible.verbose = "vvvv"
-    end
  end
 
- if ENV['INSTALL_DSPACE']
-    config.vm.provision :ansible do |ansible|
-      ansible.playbook = "install_dspace.yml"
-    end
+ config.vm.provision :ansible do |ansible|
+  ansible.playbook = "site.yml"
+  ansible.host_key_checking = false
+  ansible.extra_vars = { ansible_ssh_user: "vagrant", testing: true }
+  #ansible.verbose = "vvvv"
  end
 
   # config.vm.provision :ansible do |ansible|

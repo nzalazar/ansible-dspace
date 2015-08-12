@@ -1,7 +1,8 @@
-  - name: apache2 | install apache2
+  - name: apache2 | install apache2 with mod_jk
     apt: pkg={{item}} state=installed update_cache=yes
     with_items:
       - apache2
+      - libapache2-mod-jk
     notify:
       - restart apache
 
@@ -10,7 +11,7 @@
     tags: apache2
 
   - name: apache2 | enable modules
-    command: a2enmod rewrite headers proxy proxy_http expires
+    command: a2enmod rewrite headers proxy proxy_http expires jk
     tags: apache2
 
   - name: apache2 | copy vhost config

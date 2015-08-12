@@ -3,7 +3,7 @@
 - hosts: all
   user: vagrant
   sudo: True
-  gather_facts: True
+  gather_facts: no
   vars_files:
       - vars/defaults.yml
       - vars/user.yml

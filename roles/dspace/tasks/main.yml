@@ -4,3 +4,5 @@
  - include: postgresql.yml
  - include: apache2.yml
  - include: dspace.yml
+ - include: install.yml
+   when: install_dspace 

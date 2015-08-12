@@ -31,15 +31,8 @@
 	# http://httpd.apache.org/docs/2.2/mod/mod_proxy.html#access
 	# http://www.akadia.com/services/prevent_abuse_proxy.html
 	ProxyRequests	Off
-	# pass the Host: header from the incoming request to the proxied host,
-	# instead of the hostname specified in the ProxyPass line
-	ProxyPreserveHost On
-	ProxyPass			/	http://localhost:8081/
-	ProxyPassReverse	/	http://localhost:8081/
-
-	<Proxy *>
-		allow from all
-	</Proxy>
+	
+	JkMount / ajp13_worker
 
     # protect dspace's solr statistics (we only need to access them from localhost)
     <Location "/solr">
