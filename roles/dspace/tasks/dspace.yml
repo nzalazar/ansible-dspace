@@ -33,11 +33,11 @@
 # - name: dspace | change mounted permision
 #   sudo: yes
 #   sudo_user: root
-#   file: path="{{dspace_source_dir}}" state=directory owner=tomcat7 group=tomcat7 mode=0755 
+#   file: path="{{dspace_source_dir}}" state=directory owner=tomcat7 group=tomcat7 mode=0755
 #   tags: dspace
 
 - name: dspace | config
-  template: src=build.properties.j2 dest={{dspace_source_dir}}/build.properties 
+  template: src=build.properties.j2 dest={{dspace_source_dir}}/build.properties
   tags: dspace
 
 # - name: dspace | clean

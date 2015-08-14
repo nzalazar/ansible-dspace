@@ -1,9 +1,5 @@
-- name: dspace | build
-  # sudo: yes
-  # sudo_user: tomcat7
-  command: mvn package chdir={{dspace_source_dir}}/dspace
-  tags: install
-
 - name: dspace | perform fresh install
   command: ant fresh_install chdir={{dspace_source_dir}}/dspace/target/dspace-installer creates={{dspace_install_dir}}/webapps/xmlui
   tags: install
+  notify:
+    - restart tomcat

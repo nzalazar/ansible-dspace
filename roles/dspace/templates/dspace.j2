@@ -32,7 +32,7 @@
 	# http://www.akadia.com/services/prevent_abuse_proxy.html
 	ProxyRequests	Off
 	
-	JkMount / ajp13_worker
+	JkMount /* ajp13_worker
 
     # protect dspace's solr statistics (we only need to access them from localhost)
     <Location "/solr">
