@@ -26,3 +26,4 @@ tomcat_perm_size: 128m
 # nfs_exported_filesystem: ~/git/dspace-src/
 
 install_dspace: true
+update: false

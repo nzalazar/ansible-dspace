@@ -1,5 +1,13 @@
 - name: dspace | perform fresh install
-  command: ant fresh_install chdir={{dspace_source_dir}}/dspace/target/dspace-installer creates={{dspace_install_dir}}/webapps/xmlui
+  command: ant fresh_install chdir={{dspace_source_dir}}/dspace/target/dspace-installer 
   tags: install
   notify:
     - restart tomcat
+    - restart apache
+- name: dspace | perform update
+  command: ant update chdir={{dspace_source_dir}}/dspace/target/dspace-installer
+  tags: update 
+  when: update
+  notify:
+    - restart tomcat
+    - restart apache                 
