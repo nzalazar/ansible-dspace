@@ -12,11 +12,22 @@
 
   - name: apache2 | enable modules
     command: a2enmod rewrite headers proxy proxy_http expires jk
-    tags: apache2
+    tags: 
+      - apache2 
+      - modjk
+
+  - name: apache2 | copy worker.properties config
+    template: src=worker.properties.j2 dest=/etc/libapache2-mod-jk/workers.properties
+    tags:
+      - apache2 
+      - modjk
+    notify:
+      - restart apache
 
   - name: apache2 | copy vhost config
     template: src=dspace.j2 dest=/etc/apache2/sites-available/dspace.conf
-    tags: apache2
+    tags:
+      - apache2 
 
   - name: apache2 | enable dspace site
     command: a2ensite dspace

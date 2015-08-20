@@ -1,9 +1,28 @@
+
+- name: dspace | perform maven package
+  shell: mvn package >> maven.log chdir={{dspace_source_dir}} creates={{dspace_install_dir}}
+  async: 3600
+  poll: 5
+  when: package
+  tags: 
+    - install
+    - update
+    - package
+
 - name: dspace | perform fresh install
-  command: ant fresh_install chdir={{dspace_source_dir}}/dspace/target/dspace-installer 
+  command: ant fresh_install chdir={{dspace_source_dir}}/dspace/target/dspace-installer creates={{dspace_install_dir}}
   tags: install
+  when: install
+  sudo: True
   notify:
     - restart tomcat
     - restart apache
+
+- name: dspace | grant privileges to tomcat on dspace folder
+  file: path={{dspace_install_dir}} owner=tomcat7 group=tomcat7 mode=0755 state=directory recurse=true
+  sudo: true
+  tags: install
+
 - name: dspace | perform update
   command: ant update chdir={{dspace_source_dir}}/dspace/target/dspace-installer
   tags: update 
